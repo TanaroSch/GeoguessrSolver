@@ -15,13 +15,17 @@ var addButton = function(){
 		b.addEventListener("click", clickListener);		
 		b.style = "position:relative; top:12px; font-weight: 600;";
 		a.appendChild(b);
-		setInterval(
-			() => 
-			{
-				chrome.runtime.sendMessage({action: "getUrl"}, function(response) {
-					url = response.url;
-				})
-			}, 100);
+		chrome.storage.local.get('url', function(data) {
+    if (data.url) {
+        url = data.url;
+    }
+});
+
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+    if (changes.url && changes.url.newValue) {
+        url = changes.url.newValue;
+    }
+});
 	}
 }
 
